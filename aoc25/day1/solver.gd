@@ -10,10 +10,15 @@ func _ready():
 	_read_input()
 
 func GetNextMove():
-	if current_move >= len(moves):
+	if IsFinished():
 		return Move.new()
 	
-	return moves[current_move]
+	var move = moves[current_move]
+	current_move += 1
+	return move
+	
+func IsFinished():
+	return current_move >= len(moves)
 
 func process_move(position:int, move:Move):
 	var delta : int = 1

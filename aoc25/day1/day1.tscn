@@ -1,9 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://diqd6xf2a7h76"]
+[gd_scene load_steps=11 format=3 uid="uid://diqd6xf2a7h76"]
 
 [ext_resource type="Script" path="res://day1/solver.gd" id="1_5hhqy"]
 [ext_resource type="Texture2D" uid="uid://wdm82ao0nhay" path="res://day1/safe_backer.png" id="1_fh0t1"]
 [ext_resource type="Texture2D" uid="uid://bbjr4v4eh6pb0" path="res://day1/safe_knob.png" id="2_shyg6"]
 [ext_resource type="Script" path="res://day1/knob.gd" id="4_0dddw"]
+[ext_resource type="Script" path="res://day1/time_slider.gd" id="5_kkeds"]
+[ext_resource type="Script" path="res://day1/times_zeroed_label.gd" id="5_vageg"]
+[ext_resource type="Script" path="res://day1/restart.gd" id="7_8hfub"]
+[ext_resource type="Script" path="res://day1/solve.gd" id="7_y4vmp"]
 
 [sub_resource type="Curve" id="Curve_0dr13"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -25,26 +29,17 @@ texture = ExtResource("2_shyg6")
 offset = Vector2(5.05, -3.69)
 script = ExtResource("4_0dddw")
 solver = NodePath("../Solver")
-speed = 200.0
+wait_time = 0.0
 
-[node name="Control" type="Control" parent="."]
+[node name="Numbers" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Numbers" type="Control" parent="Control"]
 anchors_preset = 0
 offset_left = 103.0
 offset_top = 36.0
 offset_right = 143.0
 offset_bottom = 76.0
 
-[node name="Label" type="Label" parent="Control/Numbers"]
+[node name="Label" type="Label" parent="Numbers"]
 layout_mode = 0
 offset_left = 568.0
 offset_top = 200.0
@@ -53,7 +48,7 @@ offset_bottom = 223.0
 text = "0
 "
 
-[node name="Label2" type="Label" parent="Control/Numbers"]
+[node name="Label2" type="Label" parent="Numbers"]
 layout_mode = 0
 offset_left = 713.0
 offset_top = 351.0
@@ -62,7 +57,7 @@ offset_bottom = 374.0
 text = "25
 "
 
-[node name="Label3" type="Label" parent="Control/Numbers"]
+[node name="Label3" type="Label" parent="Numbers"]
 layout_mode = 0
 offset_left = 559.0
 offset_top = 494.0
@@ -71,7 +66,7 @@ offset_bottom = 517.0
 text = "50
 "
 
-[node name="Label4" type="Label" parent="Control/Numbers"]
+[node name="Label4" type="Label" parent="Numbers"]
 layout_mode = 0
 offset_left = 416.0
 offset_top = 346.0
@@ -79,24 +74,6 @@ offset_right = 456.0
 offset_bottom = 369.0
 text = "75
 "
-
-[node name="MarginContainer" type="MarginContainer" parent="Control"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
-layout_mode = 2
-
-[node name="Panel" type="Panel" parent="Control"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
 z_index = 10
@@ -117,3 +94,76 @@ color_ramp = SubResource("Gradient_8u2pi")
 
 [node name="Solver" type="Node" parent="."]
 script = ExtResource("1_5hhqy")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Zeroed:"
+
+[node name="TimesZeroedLabel" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("knob")]
+layout_mode = 2
+text = "0
+"
+script = ExtResource("5_vageg")
+knob = NodePath("../../../../../../SafeKnob")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Knob Turn Time"
+
+[node name="TimeSlider" type="HSlider" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/HBoxContainer2" node_paths=PackedStringArray("knob")]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+min_value = 0.01
+max_value = 1.0
+step = 0.01
+value = 0.01
+script = ExtResource("5_kkeds")
+knob = NodePath("../../../../../../SafeKnob")
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Solve" type="Button" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/HBoxContainer3" node_paths=PackedStringArray("knob")]
+layout_mode = 2
+text = "Quick Solve"
+script = ExtResource("7_y4vmp")
+knob = NodePath("../../../../../../SafeKnob")
+
+[node name="Restart" type="Button" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Restart"
+script = ExtResource("7_8hfub")
+
+[connection signal="on_zeroed" from="SafeKnob" to="CPUParticles2D" method="restart"]
+[connection signal="on_zeroed" from="SafeKnob" to="CanvasLayer/Control/MarginContainer/VBoxContainer/HBoxContainer/TimesZeroedLabel" method="on_zeroed"]
